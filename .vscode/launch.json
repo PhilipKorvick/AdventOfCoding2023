@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "c:/Users/Clem/Documents/Development/CPP_Projects/AdventOfCode2023/Problem 07",
+      "program": "c:/Users/Clem/Documents/Development/CPP_Projects/AdventOfCode2023/Problem 07/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
