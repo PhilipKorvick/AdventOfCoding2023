@@ -15,12 +15,12 @@ enum direction{
     south
 };
 
-struct location{
-    location(int line_, int coll_):
+struct pipeInfo{
+    pipeInfo(int line_, int coll_):
     line(line_),
     coll(coll_)
     {};
-    location(int line_, int coll_, direction from_):
+    pipeInfo(int line_, int coll_, direction from_):
     line(line_),
     coll(coll_),
     from(from_)
@@ -47,19 +47,19 @@ vector<string> getInputLines(const string& filePath){
     return result;
 }
 
-location findStartingPoint(const vector<string>& inputLines, const char& startingLetter){
+pipeInfo findStartingPoint(const vector<string>& inputLines, const char& startingLetter){
     int line = 0;
     int coll = 0;
     for(const string& inputLine : inputLines){
         coll = inputLine.find_first_of(startingLetter);
-        if(coll != string::npos) return location(line, coll);
+        if(coll != string::npos) return pipeInfo(line, coll);
         line++;
     }
-    return location(-1, -1);
+    return pipeInfo(-1, -1);
 }
 
-vector<location> findFirstStep(const vector<string> inputLines, location startingPoint){
-    vector<location> result;
+vector<pipeInfo> findFirstStep(const vector<string> inputLines, pipeInfo startingPoint){
+    vector<pipeInfo> result;
     char northChar = inputLines[startingPoint.getLine() -1][startingPoint.getColl()];
     char eastChar = inputLines[startingPoint.getLine()][startingPoint.getColl() +1];
     char southChar = inputLines[startingPoint.getLine() +1][startingPoint.getColl()];
@@ -71,50 +71,50 @@ vector<location> findFirstStep(const vector<string> inputLines, location startin
     return result;
 }
 
-vector<location> findNextStep(const vector<string>& inputLines, vector<location> stepLocations){
-    vector<location> result;
-    for(location& stepLocation : stepLocations){
-        switch(inputLines[stepLocation.getLine()][stepLocation.getColl()]){
+vector<pipeInfo> findNextStep(const vector<string>& inputLines, vector<pipeInfo> steppipeInfos){
+    vector<pipeInfo> result;
+    for(pipeInfo& steppipeInfo : steppipeInfos){
+        switch(inputLines[steppipeInfo.getLine()][steppipeInfo.getColl()]){
             case 'F':
-                if(stepLocation.getfrom() == south){ 
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() + 1, west);
+                if(steppipeInfo.getfrom() == south){ 
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine() + 1, stepLocation.getColl(), north);
+                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
                 };
                 break;
             case '7':
-                if(stepLocation.getfrom() == south){ 
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() - 1, east);
+                if(steppipeInfo.getfrom() == south){ 
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine() + 1, stepLocation.getColl(), north);
+                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
                 };
                 break;
             case 'J':
-                if(stepLocation.getfrom() == north){ 
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() - 1, east);
+                if(steppipeInfo.getfrom() == north){ 
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine() - 1, stepLocation.getColl(), south);
+                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
                 };
                 break;
             case 'L':
-                if(stepLocation.getfrom() == north){ 
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() + 1, west);
+                if(steppipeInfo.getfrom() == north){ 
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine() - 1, stepLocation.getColl(), south);
+                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
                 };
                 break;
             case '|':
-                if(stepLocation.getfrom() == south){ 
-                    result.emplace_back(stepLocation.getLine() - 1, stepLocation.getColl(), south);
+                if(steppipeInfo.getfrom() == south){ 
+                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine() + 1, stepLocation.getColl(), north);
+                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
                 };
                 break;
             case '-':
-                if(stepLocation.getfrom() == west ){
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() + 1, west);
+                if(steppipeInfo.getfrom() == west ){
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(stepLocation.getLine(), stepLocation.getColl() - 1, east);
+                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
                 };
                 break;
         }
@@ -122,27 +122,76 @@ vector<location> findNextStep(const vector<string>& inputLines, vector<location>
     return result;
 }
 
-vector<location> findAllLocations(const vector<string>& inputLines, location& startingPoint, vector<location>& stepLocations){
-    vector<location> allSteps;
+vector<pipeInfo> findAllPipeInfos(const vector<string>& inputLines, const pipeInfo& startingPoint, vector<pipeInfo> steppipeInfos){
+    vector<pipeInfo> allSteps;
     allSteps.push_back(startingPoint);
-    allSteps.push_back(stepLocations[0]);
-    allSteps.push_back(stepLocations[1]);
-    while(stepLocations[0].getColl() != stepLocations[1].getColl() || stepLocations[0].getLine() != stepLocations[1].getLine()){
-        stepLocations = findNextStep(inputLines, stepLocations);
-        allSteps.push_back(stepLocations[0]);
-        allSteps.push_back(stepLocations[1]);
+    allSteps.push_back(steppipeInfos[0]);
+    allSteps.push_back(steppipeInfos[1]);
+    while(steppipeInfos[0].getColl() != steppipeInfos[1].getColl() || steppipeInfos[0].getLine() != steppipeInfos[1].getLine()){
+        steppipeInfos = findNextStep(inputLines, steppipeInfos);
+        allSteps.push_back(steppipeInfos[0]);
+        allSteps.push_back(steppipeInfos[1]);
     }
     allSteps.pop_back();
     return allSteps;
+}
+
+vector<string> makeCleanLoop(const vector<string>& inputLines, vector<pipeInfo>& allLooppipeInfos){
+    vector<string> cleanLoop (inputLines.size(), string(inputLines[0].size(), '.'));
+    for(pipeInfo& looppipeInfo : allLooppipeInfos){
+        int line = looppipeInfo.getLine();
+        int coll = looppipeInfo.getColl();
+        cleanLoop[line][coll] = inputLines[line][coll];
+    }
+    return cleanLoop;
+}
+
+int findLoopArea(const vector<string>& cleanLoop){
+    int area = 0;
+    bool inside = false;
+    char lastTransisition = ' ';
+    for(int line = 0; line < cleanLoop.size(); line++){
+        for(int coll = 0; coll < cleanLoop[0].size(); coll++){
+            bool partOfLoop = cleanLoop[line][coll] != '.';
+            if(!partOfLoop && inside) area++;
+            switch (cleanLoop[line][coll]){
+                case 'F':
+                    if(partOfLoop) inside = !inside;
+                    lastTransisition = 'F';
+                    break;
+                case 'L':
+                    if(partOfLoop) inside = !inside;
+                    lastTransisition = 'L';
+                    break;
+                case 'J':
+                    if(partOfLoop && lastTransisition != 'F') inside = !inside;
+                    lastTransisition = 'J';
+                    break;
+                case '7':
+                    if(partOfLoop && lastTransisition != 'L') inside = !inside;
+                    lastTransisition = '7';
+                    break;
+                case 'S':
+                case '|':
+                    if(partOfLoop) inside = !inside;
+                    lastTransisition = '|';
+                    break;
+            }            
+        }
+    }
+    return area;
 }
 
 int main(){
     int steps = 1;
     const string filePath = "input.txt";
     const vector<string> inputLines = getInputLines(filePath);
-    location startingPoint = findStartingPoint(inputLines, 'S');
-    vector<location> stepLocations = findFirstStep(inputLines, startingPoint);
-    vector<location> allLocations = findAllLocations(inputLines, startingPoint, stepLocations);
-    cout << "Answer to problem 1: " << allLocations.size()/2 << endl;
+    pipeInfo startingPoint = findStartingPoint(inputLines, 'S');
+    vector<pipeInfo> stepPipeInfos = findFirstStep(inputLines, startingPoint);
+    vector<pipeInfo> allPipeInfos = findAllPipeInfos(inputLines, startingPoint, stepPipeInfos);
+    vector<string> cleanLoop = makeCleanLoop(inputLines, allPipeInfos);
+    int loopArea = findLoopArea(cleanLoop);
+    cout << "Answer to problem 1: " << allPipeInfos.size()/2 << endl;
+    cout << "Answer to problem 2: " << loopArea << endl;
     return 0;
 }

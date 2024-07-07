@@ -67,6 +67,10 @@
     "unordered_map": "cpp",
     "span": "cpp",
     "optional": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "initializer_list": "cpp",
+    "ranges": "cpp"
   }
 }
