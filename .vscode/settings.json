@@ -64,6 +64,9 @@
     "deque": "cpp",
     "vector": "cpp",
     "string": "cpp",
-    "unordered_map": "cpp"
+    "unordered_map": "cpp",
+    "span": "cpp",
+    "optional": "cpp",
+    "variant": "cpp"
   }
 }
