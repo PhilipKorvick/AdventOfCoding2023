@@ -7,7 +7,13 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "${file}", 
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Common\\common.cpp", 
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Problem 01\\problem01.cpp",
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Problem 02\\problem02.cpp",
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Problem 03\\problem03.cpp",
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Problem 04\\problem04.cpp",
+                "C:\\Users\\Clem\\Documents\\Development\\CPP_Projects\\AdventOfCoding2023\\Problem 05\\problem05.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],

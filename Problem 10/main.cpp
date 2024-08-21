@@ -27,7 +27,7 @@ struct pipeInfo{
     {};
     int getLine(){return line;};
     int getColl(){return coll;};
-    direction getfrom(){return from;};
+    direction getFrom(){return from;};
 private:
     int line;
     int coll;
@@ -71,50 +71,50 @@ vector<pipeInfo> findFirstStep(const vector<string> inputLines, pipeInfo startin
     return result;
 }
 
-vector<pipeInfo> findNextStep(const vector<string>& inputLines, vector<pipeInfo> steppipeInfos){
+vector<pipeInfo> findNextStep(const vector<string>& inputLines, vector<pipeInfo> stepPipeInfos){
     vector<pipeInfo> result;
-    for(pipeInfo& steppipeInfo : steppipeInfos){
-        switch(inputLines[steppipeInfo.getLine()][steppipeInfo.getColl()]){
+    for(pipeInfo& stepPipeInfo : stepPipeInfos){
+        switch(inputLines[stepPipeInfo.getLine()][stepPipeInfo.getColl()]){
             case 'F':
-                if(steppipeInfo.getfrom() == south){ 
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
+                if(stepPipeInfo.getFrom() == south){ 
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
+                    result.emplace_back(stepPipeInfo.getLine() + 1, stepPipeInfo.getColl(), north);
                 };
                 break;
             case '7':
-                if(steppipeInfo.getfrom() == south){ 
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
+                if(stepPipeInfo.getFrom() == south){ 
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() - 1, east);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
+                    result.emplace_back(stepPipeInfo.getLine() + 1, stepPipeInfo.getColl(), north);
                 };
                 break;
             case 'J':
-                if(steppipeInfo.getfrom() == north){ 
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
+                if(stepPipeInfo.getFrom() == north){ 
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() - 1, east);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
+                    result.emplace_back(stepPipeInfo.getLine() - 1, stepPipeInfo.getColl(), south);
                 };
                 break;
             case 'L':
-                if(steppipeInfo.getfrom() == north){ 
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
+                if(stepPipeInfo.getFrom() == north){ 
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
+                    result.emplace_back(stepPipeInfo.getLine() - 1, stepPipeInfo.getColl(), south);
                 };
                 break;
             case '|':
-                if(steppipeInfo.getfrom() == south){ 
-                    result.emplace_back(steppipeInfo.getLine() - 1, steppipeInfo.getColl(), south);
+                if(stepPipeInfo.getFrom() == south){ 
+                    result.emplace_back(stepPipeInfo.getLine() - 1, stepPipeInfo.getColl(), south);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine() + 1, steppipeInfo.getColl(), north);
+                    result.emplace_back(stepPipeInfo.getLine() + 1, stepPipeInfo.getColl(), north);
                 };
                 break;
             case '-':
-                if(steppipeInfo.getfrom() == west ){
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() + 1, west);
+                if(stepPipeInfo.getFrom() == west ){
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() + 1, west);
                 } else{ 
-                    result.emplace_back(steppipeInfo.getLine(), steppipeInfo.getColl() - 1, east);
+                    result.emplace_back(stepPipeInfo.getLine(), stepPipeInfo.getColl() - 1, east);
                 };
                 break;
         }
@@ -122,34 +122,41 @@ vector<pipeInfo> findNextStep(const vector<string>& inputLines, vector<pipeInfo>
     return result;
 }
 
-vector<pipeInfo> findAllPipeInfos(const vector<string>& inputLines, const pipeInfo& startingPoint, vector<pipeInfo> steppipeInfos){
+vector<pipeInfo> findAllPipeInfos(const vector<string>& inputLines, const pipeInfo& startingPoint, vector<pipeInfo> stepPipeInfos){
     vector<pipeInfo> allSteps;
     allSteps.push_back(startingPoint);
-    allSteps.push_back(steppipeInfos[0]);
-    allSteps.push_back(steppipeInfos[1]);
-    while(steppipeInfos[0].getColl() != steppipeInfos[1].getColl() || steppipeInfos[0].getLine() != steppipeInfos[1].getLine()){
-        steppipeInfos = findNextStep(inputLines, steppipeInfos);
-        allSteps.push_back(steppipeInfos[0]);
-        allSteps.push_back(steppipeInfos[1]);
+    allSteps.push_back(stepPipeInfos[0]);
+    allSteps.push_back(stepPipeInfos[1]);
+    while(stepPipeInfos[0].getColl() != stepPipeInfos[1].getColl() || stepPipeInfos[0].getLine() != stepPipeInfos[1].getLine()){
+        stepPipeInfos = findNextStep(inputLines, stepPipeInfos);
+        allSteps.push_back(stepPipeInfos[0]);
+        allSteps.push_back(stepPipeInfos[1]);
     }
     allSteps.pop_back();
     return allSteps;
 }
 
-vector<string> makeCleanLoop(const vector<string>& inputLines, vector<pipeInfo>& allLooppipeInfos){
+/// @brief 
+/// @param inputLines 
+/// @param allLoopPipeInfos 
+/// @return 
+vector<string> makeCleanLoop(const vector<string>& inputLines, vector<pipeInfo>& allLoopPipeInfos){
     vector<string> cleanLoop (inputLines.size(), string(inputLines[0].size(), '.'));
-    for(pipeInfo& looppipeInfo : allLooppipeInfos){
-        int line = looppipeInfo.getLine();
-        int coll = looppipeInfo.getColl();
+    for(pipeInfo& loopPipeInfo : allLoopPipeInfos){
+        int line = loopPipeInfo.getLine();
+        int coll = loopPipeInfo.getColl();
         cleanLoop[line][coll] = inputLines[line][coll];
     }
     return cleanLoop;
 }
 
+/// @brief uses a set of data with only the selected loop to find the area inside the loop
+/// @param cleanLoop a vector of strings that represent the set of data where the selected loop has pipe segments
+/// @return the number of open area units that are contained by the loop
 int findLoopArea(const vector<string>& cleanLoop){
     int area = 0;
     bool inside = false;
-    char lastTransisition = ' ';
+    char lastTransistion = ' ';
     for(int line = 0; line < cleanLoop.size(); line++){
         for(int coll = 0; coll < cleanLoop[0].size(); coll++){
             bool partOfLoop = cleanLoop[line][coll] != '.';
@@ -157,31 +164,32 @@ int findLoopArea(const vector<string>& cleanLoop){
             switch (cleanLoop[line][coll]){
                 case 'F':
                     if(partOfLoop) inside = !inside;
-                    lastTransisition = 'F';
+                    lastTransistion = 'F';
                     break;
                 case 'L':
                     if(partOfLoop) inside = !inside;
-                    lastTransisition = 'L';
+                    lastTransistion = 'L';
                     break;
                 case 'J':
-                    if(partOfLoop && lastTransisition != 'F') inside = !inside;
-                    lastTransisition = 'J';
+                    if(partOfLoop && lastTransistion != 'F') inside = !inside;
+                    lastTransistion = 'J';
                     break;
                 case '7':
-                    if(partOfLoop && lastTransisition != 'L') inside = !inside;
-                    lastTransisition = '7';
+                    if(partOfLoop && lastTransistion != 'L') inside = !inside;
+                    lastTransistion = '7';
                     break;
                 case 'S':
                 case '|':
                     if(partOfLoop) inside = !inside;
-                    lastTransisition = '|';
+                    lastTransistion = '|';
                     break;
             }            
         }
     }
     return area;
 }
-
+/// @brief Main function that calls other functions to generate data sets or takes a data set to get the answer to a problem.
+/// @return returns 0 if the program runs without errors.
 int main(){
     int steps = 1;
     const string filePath = "input.txt";
